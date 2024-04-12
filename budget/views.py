@@ -37,3 +37,20 @@ class ExpenseCreateView(View):
     
 
 
+
+# url:localhost:8000/expense/{id}/change/
+
+class ExpenseUpdateView(View):
+
+    def get(self,request,*args,**kwargs):
+
+        id=kwargs.get("pk")
+
+        expense_object=Expense.objects.get(id=id)
+
+        form_instance=ExpenseForm(instance=expense_object)
+
+        return render(request,"expense_edit.html",{"form":form_instance})
+    
+    
+
