@@ -53,4 +53,27 @@ class ExpenseUpdateView(View):
         return render(request,"expense_edit.html",{"form":form_instance})
     
     
+    def post(self,request,*args,**kwargs):
+
+        id=kwargs.get("pk")
+
+        expense_object=Expense.objects.get(id=id)
+
+        form_instance=ExpenseForm(instance=expense_object,data=request.POST)
+
+        if form_instance.is_valid():
+
+            form_instance.save()
+
+            return redirect("expense-add")
+        
+        else:
+
+            return render(request,"expense_edit.html",{"form":form_instance})
+
+
+
+
+
+
 
