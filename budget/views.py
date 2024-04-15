@@ -72,7 +72,22 @@ class ExpenseUpdateView(View):
             return render(request,"expense_edit.html",{"form":form_instance})
 
 
+# expense detail view
 
+# url:localhost:8000/expense/{id}/
+
+
+class ExpenseDetailView(View):
+
+    def get(self,request,*args,**kwargs):
+
+        id = kwargs.get("pk")
+
+        qs = Expense.objects.get(id=id)
+
+        return render(request,"expense_detail.html",{"data":qs})
+    
+     
 
 
 
