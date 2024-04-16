@@ -58,11 +58,21 @@
         </div>
       </nav>
 
+       {%for m in messages%}
+          {{m}}
+       {%endfor%}
+
+
     <!-- nav section end -->
 
     {%block main_block%}
 
     {%endblock%}
+
+    <footer class="bg-dark p-3 fixed-bottom mt-2">
+
+      <h4 class="text-center text-white">FundKeeper@2k24</h4>
+    </footer>
     
 </body>
 {%block script_block%}

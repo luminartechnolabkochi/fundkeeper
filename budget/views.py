@@ -6,6 +6,7 @@ from budget.forms import ExpenseForm
 
 from budget.models import Expense
 
+from django.contrib import messages
 
 
 class ExpenseCreateView(View):
@@ -29,10 +30,14 @@ class ExpenseCreateView(View):
 
             form_instance.save()
 
+            messages.success(request,"expense created!!")
+
+
             print("expense has been created")
 
             return redirect("expense-add")
         else:
+            messages.error(request,"expense adding failed ")
             return render(request,"expense_add.html",{"form":form_instance})
     
 
@@ -65,9 +70,13 @@ class ExpenseUpdateView(View):
 
             form_instance.save()
 
+            messages.success(request,"message changed ")
+
             return redirect("expense-add")
         
         else:
+
+            messages.error(request,"updating failed")
 
             return render(request,"expense_edit.html",{"form":form_instance})
 
@@ -86,9 +95,24 @@ class ExpenseDetailView(View):
         qs = Expense.objects.get(id=id)
 
         return render(request,"expense_detail.html",{"data":qs})
-    
-     
 
 
+# url:localhost:8000/expense/{id}/remove/
 
+class ExpenseDeleteView(View):
+
+    def get(self,request,*args,**kwargs):
+
+        id=kwargs.get("pk")
+
+        Expense.objects.get(id=id).delete()
+
+        messages.success(request,"expense removed")
+
+        return redirect("expense-add")
+
+
+# summary
+# authentication(registration,login,logout)
+# 
 
