@@ -8,6 +8,15 @@ from budget.models import Expense
 
 from django.contrib import messages
 
+from django.db.models import Sum
+
+from django.db.models.functions import TruncMonth
+
+from django.db.models import Sum
+
+from django.utils import timezone
+
+
 
 class ExpenseCreateView(View):
 
@@ -112,7 +121,58 @@ class ExpenseDeleteView(View):
         return redirect("expense-add")
 
 
-# summary
-# authentication(registration,login,logout)
-# 
+# class ExpenseSummaryView(View):
+
+#     def get(self,request,*args,**kwargs):
+
+#         monthly_expenses = Expense.objects.annotate(
+#             month=TruncMonth("created_date")
+#         ).values("month").annotate(total_expense=Sum("amount"))
+
+#         print(monthly_expenses)
+        
+#         print([expense["month"].strftime("%Y-%m") for expense in monthly_expenses])
+
+#         return redirect("expense-add")
+
+
+
+
+
+class ExpenseSummaryView(View):
+
+    def get(self,request,*args,**kwargs):
+
+        current_month = timezone.now().month
+
+        current_year = timezone.now().year
+
+        expense_list=Expense.objects.filter(created_date__month=current_month,
+                                            created_date__year=current_year
+                                            )
+        
+        expense_total=expense_list.values("amount").aggregate(total=Sum("amount"))
+
+        print(expense_total)
+
+        category_summary=expense_list.values("category").annotate(total=Sum("amount"))
+
+        print("cat summary",category_summary)
+
+        priority_summary=expense_list.values("priority").annotate(total=Sum("amount"))
+
+        print("priority summary",priority_summary) 
+
+        data={
+            "expense_total":expense_total,
+            "category_summary":category_summary,
+            "priority_summary":priority_summary           
+            }
+
+
+        return render(request,"expense_summary.html",data)
+    
+
+       
+
 

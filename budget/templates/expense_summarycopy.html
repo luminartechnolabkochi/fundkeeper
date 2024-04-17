@@ -1,0 +1,147 @@
+{%extends 'base.html'%}
+{%load custom_filters%}
+
+
+
+{%block main_block%}
+
+<h1>Summary</h1>
+
+{{expense_total}}
+<div class="container">
+    
+       <div class="card p-2">
+
+        <div class="card-header">
+            <h4 class="fw-bold text-center">Total Expense :{{expense_total.total}}</h4>
+        </div>
+        <div class="card-body row">
+
+            <div class="col-4">
+                
+            <div class="">
+                <canvas id="myChart"></canvas>
+              </div>
+            </div>
+            <div class="col-4">
+
+                {%for category in category_summary%}
+                
+               
+                <div class="mb-4 mt-3">
+                    {{category.category}}
+                    <div class="progress" role="progressbar" aria-label="Default striped example" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped" style="width:{{category.total|calculate_percentage:expense_total.total}}%"></div>
+                      </div>
+                </div>
+                  
+                {%endfor%}
+            </div>
+            <div class="col-4">
+
+                <div class="">
+                    <canvas id="priorityChart"></canvas>
+                  </div>
+                </div>
+            </div>
+
+        </div>
+       </div>
+
+</div>
+
+
+{%endblock%}
+
+{%block script_block%}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var categoryChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: [{% for ps in priority_summary %}"{{ ps.priority }}",{% endfor %}],
+            datasets: [{
+                label: 'Category Totals',
+                data: [{% for ps in priority_summary %}{{ ps.total }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // prio
+
+
+    var ctx1 = document.getElementById('priorityChart').getContext('2d');
+    var categoryChart = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for category in category_summary %}"{{ category.category }}",{% endfor %}],
+            datasets: [{
+                label: 'Category Totals',
+                data: [{% for category in category_summary %}{{ category.total }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+{%endblock%}
