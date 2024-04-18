@@ -28,7 +28,11 @@
                     {%endfor%}
 
                 </div>
-                <div class="col-4">category summary chart</div>
+                <div class="col-4">
+
+                  <canvas id="priorityChart"></canvas>
+
+                </div>
             </div>
 
         </div>
@@ -53,6 +57,30 @@
       datasets: [{
         label: '# of Votes',
         data: [{%for cs in category_summary%} "{{cs.total}}", {%endfor%}],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+
+  // priority chart
+
+  const ctx1 = document.getElementById('priorityChart');
+
+  new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+      labels: [{%for ps in priority_summary%} "{{ps.priority}}", {%endfor%}],
+      datasets: [{
+        label: '# of Votes',
+        data: [{%for ps in priority_summary%} "{{ps.total}}", {%endfor%}],
         borderWidth: 1
       }]
     },
